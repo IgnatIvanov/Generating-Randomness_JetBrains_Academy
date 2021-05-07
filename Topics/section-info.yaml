@@ -1,2 +1,4 @@
 content:
 - Intro to NumPy
+- Function decorators
+- Lambda functions
