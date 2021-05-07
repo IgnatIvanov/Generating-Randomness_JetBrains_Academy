@@ -14,6 +14,7 @@ while True:
     else:
         print('Current data length is {}, {} symbols left'.format(len(data), 100 - len(data)))
 
+print()
 print('Final data string:', data, sep='\n')
 print()
 
@@ -45,29 +46,51 @@ for x in range(0, 2):
             if current_sum > max_sum:
                 max_triad = triad
 
-print('Please enter a test string containing 0 or 1:')
-print()
+print(r'''You have $1000. Every time the system successfully predicts your next press, you lose $1.
+Otherwise, you earn $1. Print "enough" to leave the game. Let's go!
+''')
 
-test_str = str(input())
-predicted_str = ''
-predicted_str += max_triad
+capital = 1000
+while True:
+    print('Print a random string containing 0 or 1:')
 
-for i in range(2, len(test_str) - 1):
-    triad = test_str[i - 2] + test_str[i - 1] + test_str[i]
-    next_bit = ''
-    if zeros.get(triad) >= ones.get(triad):
-        next_bit = '0'
-    else:
-        next_bit = '1'
-    predicted_str += next_bit
+    test_str = str(input())
+    skip_flag = False
+    if test_str == 'enough':  # Exiting the game
+        print('Game over!')
+        break
 
-print('prediction', predicted_str, sep='\n')
+    for letter in test_str:
+        if letter != '0' and letter != '1':
+            skip_flag = True
+            break
 
-correct_n = 0
-for i in range(3, len(test_str)):
-    if test_str[i] == predicted_str[i]:
-        correct_n += 1
+    if skip_flag:
+        continue
 
-accuracy = correct_n / (len(test_str) - 3) * 100
-accuracy = int(accuracy * 100) / 100
-print('Computer guessed right {} out of {} symbols ({} %)'.format(correct_n, len(test_str) - 3, accuracy))
+    predicted_str = ''
+    predicted_str += max_triad
+
+    for i in range(2, len(test_str) - 1):
+        triad = test_str[i - 2] + test_str[i - 1] + test_str[i]
+        next_bit = ''
+        if zeros.get(triad) >= ones.get(triad):
+            next_bit = '0'
+        else:
+            next_bit = '1'
+        predicted_str += next_bit
+
+    print('prediction', predicted_str, sep='\n')
+
+    correct_n = 0
+    for i in range(3, len(test_str)):
+        if test_str[i] == predicted_str[i]:
+            correct_n += 1
+
+    accuracy = correct_n / (len(test_str) - 3) * 100
+    accuracy = int(accuracy * 100) / 100
+    print('Computer guessed right {} out of {} symbols ({} %)'.format(correct_n, len(test_str) - 3, accuracy))
+    capital -= correct_n
+    capital += len(test_str) - 3 - correct_n
+    print('Your capital is now ${}'.format(capital))
+    print()
